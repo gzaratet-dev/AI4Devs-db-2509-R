@@ -1,8 +1,10 @@
-version: "3.1"
+#version: "3.1"
 
 services:
+  # Servicio de Base de Datos PostgreSQL
   db:
     image: postgres
+    container_name: postgres_db
     restart: always
     environment:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -10,3 +12,39 @@ services:
       POSTGRES_DB: ${DB_NAME}
     ports:
       - ${DB_PORT}:5432
+    # Define un volumen para la persistencia de datos de PostgreSQL
+    # PostgreSQL 18+ requiere montar en /var/lib/postgresql en lugar de /var/lib/postgresql/data
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - internal_network # Ambos servicios compartirán esta red
+
+  # Servicio de pgAdmin 4
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_container
+    restart: always
+    environment:
+      # Credenciales para acceder a la interfaz web de pgAdmin
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "5050:80" # Acceso desde el host a pgAdmin en http://localhost:5050
+    volumes:
+      # Define un volumen para la persistencia de la configuración de pgAdmin
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - internal_network # Ambos servicios compartirán esta red
+    # Dependencia: pgAdmin no iniciará hasta que la DB esté lista
+    depends_on:
+      - db 
+
+# Definición de volúmenes para persistencia
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+# Definición de la red interna
+networks:
+  internal_network:
+    driver: bridge
