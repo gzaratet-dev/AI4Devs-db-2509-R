@@ -96,7 +96,7 @@ const AddCandidateForm = () => {
             setError('Error al añadir candidato: ' + error.message);
             setSuccessMessage('');
         }
-    };
+    }
 
     return (
         <Container className="mt-5">
