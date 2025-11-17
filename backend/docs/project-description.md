@@ -629,7 +629,7 @@ flowchart TD
 flowchart TD
     START[validateCandidateData] --> VAL_NAME[validateName<br/>2-100 chars<br/>Solo letras y espacios]
     VAL_NAME --> VAL_EMAIL[validateEmail<br/>Formato email válido]
-    VAL_EMAIL --> VAL_PHONE[validatePhone<br/>Patrón español<br/>6|7|9 + 8 dígitos]
+    VAL_EMAIL --> VAL_PHONE[validatePhone<br/>Patrón español<br/>6, 7 o 9 + 8 dígitos]
     VAL_PHONE --> VAL_ADDR[validateAddress<br/>Max 100 chars]
     VAL_ADDR --> HAS_EDU{educations?}
     HAS_EDU -->|Sí| VAL_EDU[validateEducation<br/>Por cada educación]
